@@ -14,16 +14,20 @@ lib/
 └── features/
     └── <feature>/
         ├── presentation/
-        ├── domain/       # seulement si la feature a des règles métier
-        └── data/         # seulement si la feature utilise une source externe
+        ├── controller/
+        ├── widgets/
+        ├── models/
+        ├── domain/       # optionnel : règles métier complexes
+        └── data/         # optionnel : source externe
 ```
 
 - `main.dart` démarre uniquement l'application.
 - `app.dart` contient la configuration globale de `MaterialApp`.
 - `core/` reçoit uniquement du code réellement partagé par au moins deux features et ne dépend jamais d'une feature.
 - Un client HTTP générique partagé peut aller dans `core/network/`; les appels et DTO propres à une feature restent dans son dossier `data/`.
-- Chaque écran, widget et état propre à une feature reste dans sa feature.
-- Une feature commence avec `presentation/`. Ne pas créer `domain/` ou `data/` vides.
+- Chaque feature possède `presentation/`, `controller/`, `widgets/` et `models/`.
+- `presentation/` contient les pages, `widgets/` leurs éléments réutilisables, `controller/` l'état et les actions, `models/` les données de la feature.
+- Ne pas créer `domain/` ou `data/` tant qu'ils ne répondent pas à un besoin réel.
 - `domain/` contient les entités, règles métier et interfaces de repository.
 - `data/` contient les DTO, sources de données et adapters de repository.
 - `presentation/` peut dépendre de `domain/`; `data/` peut dépendre de `domain/`.
@@ -46,6 +50,6 @@ lib/
 2. Rechercher les modules existants avant d'en ajouter.
 3. Formater avec `dart format lib test`.
 4. Exécuter `flutter analyze` puis les tests Flutter concernés.
-5. Mettre à jour `README.md` si la structure de l'architecture change.
+5. Toujours mettre à jour la documentation (`README.md` et, si nécessaire, `AGENTS.md`) lorsque le produit, un module, un parcours ou l'architecture change.
 
 Nom du package Dart : `agrolink`. Identifiant d'application : `com.agrolink.app`.
