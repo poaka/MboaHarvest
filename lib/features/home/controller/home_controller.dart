@@ -9,6 +9,11 @@ class HomeController extends ChangeNotifier {
     'Fruits',
     'Tubercules',
     'Céréales',
+    'Légumineuses',
+    'Épices',
+    'Viandes',
+    'Poissons',
+    'Produits laitiers',
   ];
 
   String selectedCategory = categories.first;

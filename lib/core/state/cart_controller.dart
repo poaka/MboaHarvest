@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-import '../../../core/models/market_product.dart';
-import '../../../core/models/order.dart';
+import '../models/market_product.dart';
+import '../models/order.dart';
 import '../models/cart_item.dart';
 
 class CartController extends ChangeNotifier {

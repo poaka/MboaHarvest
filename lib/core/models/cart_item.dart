@@ -1,4 +1,4 @@
-import '../../../core/models/market_product.dart';
+import 'market_product.dart';
 
 class CartItem {
   CartItem({
