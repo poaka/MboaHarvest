@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../controller/cart_controller.dart';
+import '../../../core/state/cart_controller.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/models/market_product.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../cart/controller/cart_controller.dart';
+import '../../../core/state/cart_controller.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   const ProductDetailsPage({required this.product, super.key});

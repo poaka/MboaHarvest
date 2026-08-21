@@ -5,9 +5,10 @@ import 'core/theme/app_theme.dart';
 import 'core/state/product_controller.dart';
 import 'features/auth/models/auth_user.dart';
 import 'features/auth/presentation/auth_page.dart';
-import 'features/cart/controller/cart_controller.dart';
+import 'core/state/cart_controller.dart';
 import 'features/home/presentation/home_page.dart';
 import 'features/farmer/presentation/farmer_dashboard.dart';
+import 'features/cart/presentation/cart_page.dart';
 
 class AgroLinkApp extends StatefulWidget {
 
@@ -38,10 +39,15 @@ class _AgroLinkAppState extends State<AgroLinkApp> {
                     farmerName: _user!.displayName,
                     onLogout: () => setState(() => _user = null),
                   )
-                : HomePage(
-                    displayName: _user!.displayName,
-                    isFarmer: false,
-                    onLogout: () => setState(() => _user = null),
+                : Builder(
+                    builder: (context) => HomePage(
+                      displayName: _user!.displayName,
+                      isFarmer: false,
+                      onLogout: () => setState(() => _user = null),
+                      onCartTapped: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const CartPage()),
+                      ),
+                    ),
                   )),
       ),
     );

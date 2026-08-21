@@ -3,8 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/state/product_controller.dart';
-import '../../cart/controller/cart_controller.dart';
-import '../../cart/presentation/cart_page.dart';
+import '../../../core/state/cart_controller.dart';
 import '../controller/home_controller.dart';
 import '../widgets/product_card.dart';
 
@@ -13,12 +12,14 @@ class HomePage extends StatefulWidget {
     required this.displayName,
     required this.isFarmer,
     required this.onLogout,
+    required this.onCartTapped,
     super.key,
   });
 
   final String displayName;
   final bool isFarmer;
   final VoidCallback onLogout;
+  final VoidCallback onCartTapped;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _HomeHeader(onLogout: widget.onLogout),
+                            _HomeHeader(onLogout: widget.onLogout, onCartTapped: widget.onCartTapped),
                             const SizedBox(height: 28),
                             Text(
                               'Bonjour, ${widget.displayName}',
@@ -162,9 +163,10 @@ class _HomePageState extends State<HomePage> {
 }
 
 class _HomeHeader extends StatelessWidget {
-  const _HomeHeader({required this.onLogout});
+  const _HomeHeader({required this.onLogout, required this.onCartTapped});
 
   final VoidCallback onLogout;
+  final VoidCallback onCartTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -209,11 +211,7 @@ class _HomeHeader extends StatelessWidget {
               children: [
                 IconButton(
                   icon: const Icon(Icons.shopping_cart_outlined),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const CartPage()),
-                    );
-                  },
+                  onPressed: onCartTapped,
                 ),
                 if (cart.totalItems > 0)
                   Positioned(

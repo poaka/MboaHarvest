@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/state/product_controller.dart';
-import '../../cart/controller/cart_controller.dart';
+import '../../../core/state/cart_controller.dart';
 import 'add_product_page.dart';
 
 class FarmerDashboard extends StatelessWidget {
