@@ -82,8 +82,35 @@ class CartPage extends StatelessWidget {
                                 const SizedBox(height: 4),
                                 Row(
                                   children: [
-                                    Text('Qté: ${item.quantity}', style: const TextStyle(fontSize: 12)),
-                                    const SizedBox(width: 8),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey.shade300),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          InkWell(
+                                            onTap: () => cart.decrementQuantity(item.product.id),
+                                            child: const Padding(
+                                              padding: EdgeInsets.all(4.0),
+                                              child: Icon(Icons.remove, size: 16),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                            child: Text('${item.quantity}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                                          ),
+                                          InkWell(
+                                            onTap: () => cart.addProduct(item.product, 1),
+                                            child: const Padding(
+                                              padding: EdgeInsets.all(4.0),
+                                              child: Icon(Icons.add, size: 16),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
                                     InkWell(
                                       onTap: () => cart.removeProduct(item.product.id),
                                       child: const Icon(Icons.delete_outline, size: 20, color: Colors.red),

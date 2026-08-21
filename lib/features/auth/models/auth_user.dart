@@ -14,4 +14,23 @@ class AuthUser {
   final String displayName;
   final String phoneNumber;
   final UserRole role;
+
+  factory AuthUser.fromJson(Map<String, dynamic> json) {
+    return AuthUser(
+      displayName: json['displayName'] as String,
+      phoneNumber: json['phoneNumber'] as String,
+      role: UserRole.values.firstWhere(
+        (e) => e.toString() == json['role'],
+        orElse: () => UserRole.buyer,
+      ),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'displayName': displayName,
+      'phoneNumber': phoneNumber,
+      'role': role.toString(),
+    };
+  }
 }

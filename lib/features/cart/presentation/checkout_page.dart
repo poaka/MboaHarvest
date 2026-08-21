@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/state/cart_controller.dart';
+import '../../../core/state/order_controller.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});
@@ -13,11 +14,13 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   final _phoneController = TextEditingController();
+  final _addressController = TextEditingController();
   bool _isLoading = false;
 
   @override
   void dispose() {
     _phoneController.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -25,6 +28,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
     if (_phoneController.text.length < 9) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Veuillez entrer un numéro valide (9 chiffres)')),
+      );
+      return;
+    }
+    
+    if (_addressController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Veuillez entrer une adresse de livraison')),
       );
       return;
     }
@@ -37,7 +47,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
     if (!mounted) return;
     
     // Process order
-    context.read<CartController>().checkout('buyer_123'); // Simulate buyer ID
+    context.read<CartController>().checkout(
+      'buyer_123', // Simulate buyer ID
+      'Client AgroLink', // Simulate Name
+      '+237 ${_phoneController.text}',
+      _addressController.text.trim(),
+      onOrderCreated: (order) {
+        context.read<OrderController>().addOrder(order);
+      },
+    );
 
     // Show success and go back
     showDialog(
@@ -101,6 +119,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 ),
               ),
               const SizedBox(height: 32),
+              const Text('Adresse de livraison', style: TextStyle(fontWeight: FontWeight.w600)),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _addressController,
+                decoration: InputDecoration(
+                  hintText: 'Quartier, repère...',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: AppColors.leaf, width: 2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               const Text('Numéro Mobile Money / Orange Money', style: TextStyle(fontWeight: FontWeight.w600)),
               const SizedBox(height: 8),
               TextField(

@@ -1,9 +1,46 @@
 import 'package:flutter/foundation.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../models/market_product.dart';
 
 class ProductController extends ChangeNotifier {
-  final List<MarketProduct> _products = [
+  ProductController() {
+    _loadProducts();
+  }
+
+  final _box = GetStorage();
+  final String _storageKey = 'products';
+
+  List<MarketProduct> _products = [];
+
+  List<MarketProduct> get allProducts => List.unmodifiable(_products);
+
+  void _loadProducts() {
+    final storedProducts = _box.read<List<dynamic>>(_storageKey);
+    if (storedProducts != null && storedProducts.isNotEmpty) {
+      _products = storedProducts.map((p) => MarketProduct.fromJson(Map<String, dynamic>.from(p))).toList();
+    } else {
+      _products = _defaultProducts;
+      _saveProducts();
+    }
+  }
+
+  void _saveProducts() {
+    final data = _products.map((p) => p.toJson()).toList();
+    _box.write(_storageKey, data);
+  }
+
+  void addProduct(MarketProduct product) {
+    _products.add(product);
+    _saveProducts();
+    notifyListeners();
+  }
+
+  List<MarketProduct> getProductsByFarmer(String farmerName) {
+    return _products.where((p) => p.farmer == farmerName).toList();
+  }
+
+  final List<MarketProduct> _defaultProducts = [
     const MarketProduct(
       id: 'p1',
       name: 'Tomates fraîches',
@@ -105,15 +142,4 @@ class ProductController extends ChangeNotifier {
       emoji: '🧅',
     ),
   ];
-
-  List<MarketProduct> get allProducts => List.unmodifiable(_products);
-
-  void addProduct(MarketProduct product) {
-    _products.add(product);
-    notifyListeners();
-  }
-
-  List<MarketProduct> getProductsByFarmer(String farmerName) {
-    return _products.where((p) => p.farmer == farmerName).toList();
-  }
 }

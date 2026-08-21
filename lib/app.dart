@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:get_storage/get_storage.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/state/product_controller.dart';
 import 'features/auth/models/auth_user.dart';
 import 'features/auth/presentation/auth_page.dart';
 import 'core/state/cart_controller.dart';
-import 'features/home/presentation/home_page.dart';
+import 'core/state/order_controller.dart';
+import 'core/presentation/main_layout.dart';
 import 'features/farmer/presentation/farmer_dashboard.dart';
-import 'features/cart/presentation/cart_page.dart';
 
 class AgroLinkApp extends StatefulWidget {
 
@@ -20,6 +21,32 @@ class AgroLinkApp extends StatefulWidget {
 
 class _AgroLinkAppState extends State<AgroLinkApp> {
   AuthUser? _user;
+  final _box = GetStorage();
+  final _sessionKey = 'auth_session';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSession();
+  }
+
+  void _loadSession() {
+    final sessionData = _box.read<Map<String, dynamic>>(_sessionKey);
+    if (sessionData != null) {
+      setState(() {
+        _user = AuthUser.fromJson(sessionData);
+      });
+    }
+  }
+
+  void _setSession(AuthUser? user) {
+    setState(() => _user = user);
+    if (user != null) {
+      _box.write(_sessionKey, user.toJson());
+    } else {
+      _box.remove(_sessionKey);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,27 +54,23 @@ class _AgroLinkAppState extends State<AgroLinkApp> {
       providers: [
         ChangeNotifierProvider(create: (_) => ProductController()),
         ChangeNotifierProvider(create: (_) => CartController()),
+        ChangeNotifierProvider(create: (_) => OrderController()),
       ],
       child: MaterialApp(
         title: 'AgroLink',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
         home: _user == null
-            ? AuthPage(onAuthenticated: (user) => setState(() => _user = user))
+            ? AuthPage(onAuthenticated: _setSession)
             : (_user!.role == UserRole.farmer
                 ? FarmerDashboard(
                     farmerName: _user!.displayName,
-                    onLogout: () => setState(() => _user = null),
+                    authUser: _user!,
+                    onLogout: () => _setSession(null),
                   )
-                : Builder(
-                    builder: (context) => HomePage(
-                      displayName: _user!.displayName,
-                      isFarmer: false,
-                      onLogout: () => setState(() => _user = null),
-                      onCartTapped: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const CartPage()),
-                      ),
-                    ),
+                : MainLayout(
+                    authUser: _user!,
+                    onLogout: () => _setSession(null),
                   )),
       ),
     );
