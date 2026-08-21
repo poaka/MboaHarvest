@@ -49,7 +49,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           color: const Color(0xFFEAF1E8),
                           shape: BoxShape.circle,
                         ),
-                        child: Text(product.emoji, style: const TextStyle(fontSize: 60)),
+                        child: Text(
+                          product.emoji,
+                          style: const TextStyle(fontSize: 60),
+                        ),
                       ),
                       const SizedBox(height: 24),
                       Text(
@@ -68,8 +71,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       ),
                       const SizedBox(height: 24),
                       ListTile(
-                        leading: const Icon(Icons.storefront, color: AppColors.leaf),
-                        title: Text(product.farmer, style: const TextStyle(fontWeight: FontWeight.w600)),
+                        leading: const Icon(
+                          Icons.storefront,
+                          color: AppColors.leaf,
+                        ),
+                        title: Text(
+                          product.farmer,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
                         subtitle: Text(product.location),
                       ),
                       const Divider(),
@@ -86,7 +95,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           const SizedBox(width: 16),
                           Text(
                             '$_quantity',
-                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           const SizedBox(width: 16),
                           IconButton(
@@ -100,7 +112,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       const SizedBox(height: 16),
                       Text(
                         'Total: ${product.price * _quantity} FCFA',
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ],
                   ),
@@ -118,7 +133,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   context.read<CartController>().addProduct(product, _quantity);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('$_quantity x ${product.name} ajouté(s) au panier'),
+                      content: Text(
+                        '$_quantity x ${product.name} ajouté(s) au panier',
+                      ),
                       backgroundColor: AppColors.leafDark,
                     ),
                   );
@@ -126,7 +143,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 },
                 child: const Text(
                   'Ajouter au panier',
-                  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],

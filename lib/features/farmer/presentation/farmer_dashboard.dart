@@ -3,44 +3,44 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/state/product_controller.dart';
-import '../../../core/state/cart_controller.dart';
+import '../../../core/models/order.dart';
+import '../../../core/state/order_controller.dart';
+import '../../auth/models/auth_user.dart';
+import '../../profile/presentation/profile_page.dart';
 import 'add_product_page.dart';
 
 class FarmerDashboard extends StatelessWidget {
   const FarmerDashboard({
     required this.farmerName,
     required this.onLogout,
+    required this.authUser,
     super.key,
   });
 
   final String farmerName;
   final VoidCallback onLogout;
+  final AuthUser authUser;
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: AppColors.canvas,
           elevation: 0,
-          title: Text(
+          title: const Text(
             'AgroLink - Espace Producteur',
-            style: const TextStyle(color: AppColors.ink, fontWeight: FontWeight.bold, fontSize: 18),
+            style: TextStyle(color: AppColors.ink, fontWeight: FontWeight.bold, fontSize: 18),
           ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.logout, color: AppColors.ink),
-              onPressed: onLogout,
-            ),
-          ],
           bottom: const TabBar(
             labelColor: AppColors.leafDark,
             unselectedLabelColor: Colors.grey,
             indicatorColor: AppColors.leaf,
             tabs: [
-              Tab(text: 'Mes Produits'),
+              Tab(text: 'Produits'),
               Tab(text: 'Commandes'),
+              Tab(text: 'Profil'),
             ],
           ),
         ),
@@ -48,6 +48,7 @@ class FarmerDashboard extends StatelessWidget {
           children: [
             _MyProductsTab(farmerName: farmerName),
             _OrdersTab(),
+            ProfilePage(authUser: authUser, onLogout: onLogout),
           ],
         ),
         floatingActionButton: FloatingActionButton.extended(
@@ -121,22 +122,64 @@ class _MyProductsTab extends StatelessWidget {
 }
 
 class _OrdersTab extends StatelessWidget {
+  
+  void _showRejectDialog(BuildContext context, Order order) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Rejeter la commande'),
+        content: const Text('Êtes-vous sûr de vouloir rejeter cette commande ? Cette action est irréversible et le client en sera informé.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Annuler'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () {
+              context.read<OrderController>().updateOrderStatus(order.id, OrderStatus.rejected);
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Commande rejetée')));
+            },
+            child: const Text('Rejeter', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<CartController>(
-      builder: (context, cart, child) {
-        final orders = cart.orders;
-        // In a real app, we would filter orders containing this farmer's products.
-        // Here we just simulate showing all orders for demo.
+    return Consumer<OrderController>(
+      builder: (context, controller, child) {
+        final orders = controller.orders;
+        
         if (orders.isEmpty) {
-          return const Center(child: Text('Aucune commande reçue pour le moment.'));
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.inbox_outlined, size: 64, color: Colors.grey.shade400),
+                const SizedBox(height: 16),
+                const Text('Aucune commande reçue.'),
+                const SizedBox(height: 8),
+                const Text('Les commandes apparaîtront ici.', style: TextStyle(color: Colors.grey)),
+              ],
+            ),
+          );
         }
+
+        // Sort by date descending
+        final sortedOrders = List<Order>.from(orders)
+          ..sort((a, b) => b.date.compareTo(a.date));
 
         return ListView.builder(
           padding: const EdgeInsets.all(20),
-          itemCount: orders.length,
+          itemCount: sortedOrders.length,
           itemBuilder: (context, index) {
-            final order = orders[index];
+            final order = sortedOrders[index];
+            final isRejected = order.status == OrderStatus.rejected;
+            
             return Card(
               margin: const EdgeInsets.only(bottom: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -151,8 +194,18 @@ class _OrdersTab extends StatelessWidget {
                         Text('Commande #${order.id.substring(0, 6)}', style: const TextStyle(fontWeight: FontWeight.bold)),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(color: Colors.green.shade100, borderRadius: BorderRadius.circular(8)),
-                          child: const Text('Validée', style: TextStyle(color: Colors.green, fontSize: 12, fontWeight: FontWeight.bold)),
+                          decoration: BoxDecoration(
+                            color: isRejected ? Colors.red.shade100 : Colors.green.shade100, 
+                            borderRadius: BorderRadius.circular(8)
+                          ),
+                          child: Text(
+                            isRejected ? 'Rejetée' : 'Nouvelle', 
+                            style: TextStyle(
+                              color: isRejected ? Colors.red : Colors.green, 
+                              fontSize: 12, 
+                              fontWeight: FontWeight.bold
+                            )
+                          ),
                         ),
                       ],
                     ),
@@ -166,6 +219,22 @@ class _OrdersTab extends StatelessWidget {
                           ),
                         )),
                     const Divider(),
+                    const Text('Détails du client', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.grey)),
+                    const SizedBox(height: 4),
+                    if (order.clientName != null) Text(order.clientName!, style: const TextStyle(fontWeight: FontWeight.w500)),
+                    if (order.clientPhone != null) Text(order.clientPhone!, style: const TextStyle(color: AppColors.leafDark, fontWeight: FontWeight.w500)),
+                    if (order.deliveryAddress != null) ...[
+                      const SizedBox(height: 4),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.location_on_outlined, size: 16, color: Colors.grey),
+                          const SizedBox(width: 4),
+                          Expanded(child: Text(order.deliveryAddress!, style: const TextStyle(fontSize: 13))),
+                        ],
+                      ),
+                    ],
+                    const Divider(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -173,6 +242,22 @@ class _OrdersTab extends StatelessWidget {
                         Text('${order.total} FCFA', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.leafDark)),
                       ],
                     ),
+                    if (!isRejected) ...[
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          icon: const Icon(Icons.cancel_outlined, size: 18),
+                          label: const Text('Rejeter la commande'),
+                          onPressed: () => _showRejectDialog(context, order),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.red,
+                            side: const BorderSide(color: Colors.red),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
+                        ),
+                      ),
+                    ]
                   ],
                 ),
               ),

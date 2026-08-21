@@ -1,6 +1,6 @@
 import 'market_product.dart';
 
-enum OrderStatus { pending, validated, completed }
+enum OrderStatus { pending, validated, completed, rejected }
 
 class Order {
   Order({
@@ -10,6 +10,9 @@ class Order {
     required this.total,
     required this.date,
     this.status = OrderStatus.pending,
+    this.clientName,
+    this.clientPhone,
+    this.deliveryAddress,
   });
 
   final String id;
@@ -17,7 +20,34 @@ class Order {
   final List<OrderItem> items;
   final int total;
   final DateTime date;
-  OrderStatus status;
+  final OrderStatus status;
+  final String? clientName;
+  final String? clientPhone;
+  final String? deliveryAddress;
+
+  Order copyWith({
+    String? id,
+    String? buyerId,
+    List<OrderItem>? items,
+    int? total,
+    DateTime? date,
+    OrderStatus? status,
+    String? clientName,
+    String? clientPhone,
+    String? deliveryAddress,
+  }) {
+    return Order(
+      id: id ?? this.id,
+      buyerId: buyerId ?? this.buyerId,
+      items: items ?? this.items,
+      total: total ?? this.total,
+      date: date ?? this.date,
+      status: status ?? this.status,
+      clientName: clientName ?? this.clientName,
+      clientPhone: clientPhone ?? this.clientPhone,
+      deliveryAddress: deliveryAddress ?? this.deliveryAddress,
+    );
+  }
 }
 
 class OrderItem {
@@ -28,4 +58,14 @@ class OrderItem {
 
   final MarketProduct product;
   final int quantity;
+  
+  OrderItem copyWith({
+    MarketProduct? product,
+    int? quantity,
+  }) {
+    return OrderItem(
+      product: product ?? this.product,
+      quantity: quantity ?? this.quantity,
+    );
+  }
 }

@@ -6,10 +6,8 @@ import '../models/cart_item.dart';
 
 class CartController extends ChangeNotifier {
   final List<CartItem> _items = [];
-  final List<Order> _orders = []; // Simulating orders placed
 
   List<CartItem> get items => List.unmodifiable(_items);
-  List<Order> get orders => List.unmodifiable(_orders);
 
   int get totalItems => _items.fold(0, (sum, item) => sum + item.quantity);
   
@@ -35,7 +33,7 @@ class CartController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void checkout(String buyerId) {
+  void checkout(String buyerId, String? clientName, String? clientPhone, String? deliveryAddress, {required Function(Order) onOrderCreated}) {
     if (_items.isEmpty) return;
 
     final newOrder = Order(
@@ -45,9 +43,12 @@ class CartController extends ChangeNotifier {
       total: totalPrice,
       date: DateTime.now(),
       status: OrderStatus.validated,
+      clientName: clientName,
+      clientPhone: clientPhone,
+      deliveryAddress: deliveryAddress,
     );
 
-    _orders.add(newOrder);
+    onOrderCreated(newOrder);
     _items.clear();
     notifyListeners();
   }

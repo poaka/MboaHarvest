@@ -6,9 +6,9 @@ import 'core/state/product_controller.dart';
 import 'features/auth/models/auth_user.dart';
 import 'features/auth/presentation/auth_page.dart';
 import 'core/state/cart_controller.dart';
-import 'features/home/presentation/home_page.dart';
+import 'core/state/order_controller.dart';
+import 'core/presentation/main_layout.dart';
 import 'features/farmer/presentation/farmer_dashboard.dart';
-import 'features/cart/presentation/cart_page.dart';
 
 class AgroLinkApp extends StatefulWidget {
 
@@ -27,6 +27,7 @@ class _AgroLinkAppState extends State<AgroLinkApp> {
       providers: [
         ChangeNotifierProvider(create: (_) => ProductController()),
         ChangeNotifierProvider(create: (_) => CartController()),
+        ChangeNotifierProvider(create: (_) => OrderController()),
       ],
       child: MaterialApp(
         title: 'AgroLink',
@@ -37,17 +38,12 @@ class _AgroLinkAppState extends State<AgroLinkApp> {
             : (_user!.role == UserRole.farmer
                 ? FarmerDashboard(
                     farmerName: _user!.displayName,
+                    authUser: _user!,
                     onLogout: () => setState(() => _user = null),
                   )
-                : Builder(
-                    builder: (context) => HomePage(
-                      displayName: _user!.displayName,
-                      isFarmer: false,
-                      onLogout: () => setState(() => _user = null),
-                      onCartTapped: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const CartPage()),
-                      ),
-                    ),
+                : MainLayout(
+                    authUser: _user!,
+                    onLogout: () => setState(() => _user = null),
                   )),
       ),
     );
