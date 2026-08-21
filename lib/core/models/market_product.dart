@@ -1,5 +1,6 @@
 class MarketProduct {
   const MarketProduct({
+    required this.id,
     required this.name,
     required this.farmer,
     required this.location,
@@ -9,6 +10,7 @@ class MarketProduct {
     required this.emoji,
   });
 
+  final String id;
   final String name;
   final String farmer;
   final String location;

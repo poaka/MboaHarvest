@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/state/product_controller.dart';
+import '../../../core/state/cart_controller.dart';
 import '../controller/home_controller.dart';
 import '../widgets/product_card.dart';
 
@@ -9,12 +12,14 @@ class HomePage extends StatefulWidget {
     required this.displayName,
     required this.isFarmer,
     required this.onLogout,
+    required this.onCartTapped,
     super.key,
   });
 
   final String displayName;
   final bool isFarmer;
   final VoidCallback onLogout;
+  final VoidCallback onCartTapped;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -31,12 +36,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final allProducts = context.watch<ProductController>().allProducts;
+
     return Scaffold(
       body: SafeArea(
         child: AnimatedBuilder(
           animation: _controller,
           builder: (context, _) {
-            final products = _controller.visibleProducts;
+            final products = _controller.getVisibleProducts(allProducts);
             return CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
@@ -48,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _HomeHeader(onLogout: widget.onLogout),
+                            _HomeHeader(onLogout: widget.onLogout, onCartTapped: widget.onCartTapped),
                             const SizedBox(height: 28),
                             Text(
                               'Bonjour, ${widget.displayName}',
@@ -156,9 +163,10 @@ class _HomePageState extends State<HomePage> {
 }
 
 class _HomeHeader extends StatelessWidget {
-  const _HomeHeader({required this.onLogout});
+  const _HomeHeader({required this.onLogout, required this.onCartTapped});
 
   final VoidCallback onLogout;
+  final VoidCallback onCartTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -195,6 +203,39 @@ class _HomeHeader extends StatelessWidget {
               ),
             ],
           ),
+        ),
+        Consumer<CartController>(
+          builder: (context, cart, child) {
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.shopping_cart_outlined),
+                  onPressed: onCartTapped,
+                ),
+                if (cart.totalItems > 0)
+                  Positioned(
+                    right: 4,
+                    top: 4,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Text(
+                        '${cart.totalItems}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
         ),
         IconButton(
           key: const Key('logout'),

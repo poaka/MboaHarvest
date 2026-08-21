@@ -52,7 +52,7 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                       const SizedBox(height: 22),
                       Text(
-                        'Du champ à votre table.',
+                        'Du champ à votre tables.',
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       const SizedBox(height: 10),

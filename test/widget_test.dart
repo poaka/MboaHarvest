@@ -5,6 +5,7 @@ import 'package:agrolink/app.dart';
 import 'package:agrolink/features/auth/controller/auth_controller.dart';
 import 'package:agrolink/features/auth/models/auth_user.dart';
 import 'package:agrolink/features/home/controller/home_controller.dart';
+import 'package:agrolink/core/state/product_controller.dart';
 
 void main() {
   testWidgets('connecte un acheteur puis affiche l’accueil', (tester) async {
@@ -42,12 +43,13 @@ void main() {
 
   test('filtre les produits par recherche et catégorie', () {
     final controller = HomeController();
+    final allProducts = ProductController().allProducts;
 
     controller.search('Soa');
-    expect(controller.visibleProducts.single.name, 'Maïs jaune');
+    expect(controller.getVisibleProducts(allProducts).single.name, 'Maïs jaune');
 
     controller.search('');
     controller.selectCategory('Tubercules');
-    expect(controller.visibleProducts.single.name, 'Macabo blanc');
+    expect(controller.getVisibleProducts(allProducts).single.name, 'Macabo blanc');
   });
 }
