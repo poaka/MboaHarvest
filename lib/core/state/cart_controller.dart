@@ -1,17 +1,37 @@
 import 'package:flutter/foundation.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../models/market_product.dart';
 import '../models/order.dart';
 import '../models/cart_item.dart';
 
 class CartController extends ChangeNotifier {
-  final List<CartItem> _items = [];
+  CartController() {
+    _loadCart();
+  }
+
+  final _box = GetStorage();
+  final String _storageKey = 'cart';
+
+  List<CartItem> _items = [];
 
   List<CartItem> get items => List.unmodifiable(_items);
 
   int get totalItems => _items.fold(0, (sum, item) => sum + item.quantity);
   
   int get totalPrice => _items.fold(0, (sum, item) => sum + item.totalPrice);
+
+  void _loadCart() {
+    final storedCart = _box.read<List<dynamic>>(_storageKey);
+    if (storedCart != null) {
+      _items = storedCart.map((i) => CartItem.fromJson(Map<String, dynamic>.from(i))).toList();
+    }
+  }
+
+  void _saveCart() {
+    final data = _items.map((i) => i.toJson()).toList();
+    _box.write(_storageKey, data);
+  }
 
   void addProduct(MarketProduct product, [int quantity = 1]) {
     final index = _items.indexWhere((item) => item.product.id == product.id);
@@ -20,16 +40,32 @@ class CartController extends ChangeNotifier {
     } else {
       _items.add(CartItem(product: product, quantity: quantity));
     }
+    _saveCart();
     notifyListeners();
+  }
+
+  void decrementQuantity(String productId) {
+    final index = _items.indexWhere((item) => item.product.id == productId);
+    if (index >= 0) {
+      if (_items[index].quantity > 1) {
+        _items[index].quantity--;
+      } else {
+        _items.removeAt(index);
+      }
+      _saveCart();
+      notifyListeners();
+    }
   }
 
   void removeProduct(String productId) {
     _items.removeWhere((item) => item.product.id == productId);
+    _saveCart();
     notifyListeners();
   }
 
   void clearCart() {
     _items.clear();
+    _saveCart();
     notifyListeners();
   }
 
@@ -50,6 +86,7 @@ class CartController extends ChangeNotifier {
 
     onOrderCreated(newOrder);
     _items.clear();
+    _saveCart();
     notifyListeners();
   }
 }

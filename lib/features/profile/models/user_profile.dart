@@ -26,4 +26,22 @@ class UserProfile {
       bio: bio ?? this.bio,
     );
   }
+
+  factory UserProfile.fromJson(Map<String, dynamic> json) {
+    return UserProfile(
+      authUser: AuthUser.fromJson(Map<String, dynamic>.from(json['authUser'])),
+      email: json['email'] as String?,
+      address: json['address'] as String?,
+      bio: json['bio'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'authUser': authUser.toJson(),
+      'email': email,
+      'address': address,
+      'bio': bio,
+    };
+  }
 }

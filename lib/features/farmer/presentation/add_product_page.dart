@@ -99,6 +99,7 @@ class _AddProductPageState extends State<AddProductPage> {
                     Expanded(
                       child: DropdownButtonFormField<String>(
                         initialValue: _unit,
+                        isExpanded: true,
                         decoration: const InputDecoration(labelText: 'Unité', border: OutlineInputBorder()),
                         items: ['kg', 'régime', 'sac', 'unité']
                             .map((u) => DropdownMenuItem(value: u, child: Text(u)))
@@ -111,6 +112,7 @@ class _AddProductPageState extends State<AddProductPage> {
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   initialValue: _selectedCategory,
+                  isExpanded: true,
                   decoration: const InputDecoration(labelText: 'Catégorie', border: OutlineInputBorder()),
                   items: HomeController.categories
                       .skip(1) // Skip "Tous"

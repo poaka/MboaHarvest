@@ -1,11 +1,15 @@
 import 'package:flutter/foundation.dart';
+import 'package:get_storage/get_storage.dart';
 import '../../auth/models/auth_user.dart';
 import '../models/user_profile.dart';
 
 class ProfileController extends ChangeNotifier {
   ProfileController(AuthUser authUser) {
-    _profile = UserProfile(authUser: authUser);
+    _loadProfile(authUser);
   }
+
+  final _box = GetStorage();
+  final String _storageKey = 'user_profile';
 
   late UserProfile _profile;
   UserProfile get profile => _profile;
@@ -15,6 +19,22 @@ class ProfileController extends ChangeNotifier {
   
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  void _loadProfile(AuthUser authUser) {
+    final storedData = _box.read<Map<String, dynamic>>(_storageKey);
+    if (storedData != null) {
+      final storedProfile = UserProfile.fromJson(storedData);
+      if (storedProfile.authUser.phoneNumber == authUser.phoneNumber) {
+        _profile = storedProfile;
+        return;
+      }
+    }
+    _profile = UserProfile(authUser: authUser);
+  }
+
+  void _saveProfile() {
+    _box.write(_storageKey, _profile.toJson());
+  }
 
   void toggleEdit() {
     _isEditing = !_isEditing;
@@ -46,6 +66,8 @@ class ProfileController extends ChangeNotifier {
       address: address,
       bio: bio,
     );
+
+    _saveProfile();
 
     _isLoading = false;
     _isEditing = false;

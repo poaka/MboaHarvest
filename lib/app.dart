@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:get_storage/get_storage.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/state/product_controller.dart';
@@ -20,6 +21,32 @@ class AgroLinkApp extends StatefulWidget {
 
 class _AgroLinkAppState extends State<AgroLinkApp> {
   AuthUser? _user;
+  final _box = GetStorage();
+  final _sessionKey = 'auth_session';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSession();
+  }
+
+  void _loadSession() {
+    final sessionData = _box.read<Map<String, dynamic>>(_sessionKey);
+    if (sessionData != null) {
+      setState(() {
+        _user = AuthUser.fromJson(sessionData);
+      });
+    }
+  }
+
+  void _setSession(AuthUser? user) {
+    setState(() => _user = user);
+    if (user != null) {
+      _box.write(_sessionKey, user.toJson());
+    } else {
+      _box.remove(_sessionKey);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,16 +61,16 @@ class _AgroLinkAppState extends State<AgroLinkApp> {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
         home: _user == null
-            ? AuthPage(onAuthenticated: (user) => setState(() => _user = user))
+            ? AuthPage(onAuthenticated: _setSession)
             : (_user!.role == UserRole.farmer
                 ? FarmerDashboard(
                     farmerName: _user!.displayName,
                     authUser: _user!,
-                    onLogout: () => setState(() => _user = null),
+                    onLogout: () => _setSession(null),
                   )
                 : MainLayout(
                     authUser: _user!,
-                    onLogout: () => setState(() => _user = null),
+                    onLogout: () => _setSession(null),
                   )),
       ),
     );
