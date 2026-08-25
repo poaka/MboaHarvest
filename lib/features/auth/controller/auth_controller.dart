@@ -47,8 +47,8 @@ class AuthController extends ChangeNotifier {
       displayName: mode == AuthMode.register
           ? name.trim()
           : role == UserRole.farmer
-          ? 'Producteur AgroLink'
-          : 'Acheteur AgroLink',
+          ? 'Producteur MboaHarvest'
+          : 'Acheteur MboaHarvest',
       phoneNumber: '+237 $digits',
       role: role,
     );

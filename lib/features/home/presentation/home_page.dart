@@ -187,7 +187,7 @@ class _HomeHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'AgroLink CM',
+                'MboaHarvest CM',
                 style: TextStyle(
                   color: AppColors.ink,
                   fontSize: 18,

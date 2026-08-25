@@ -30,7 +30,7 @@ class FarmerDashboard extends StatelessWidget {
           backgroundColor: AppColors.canvas,
           elevation: 0,
           title: const Text(
-            'AgroLink - Espace Producteur',
+            'MboaHarvest - Espace Producteur',
             style: TextStyle(color: AppColors.ink, fontWeight: FontWeight.bold, fontSize: 18),
           ),
           bottom: const TabBar(

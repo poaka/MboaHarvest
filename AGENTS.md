@@ -52,4 +52,4 @@ lib/
 4. Exécuter `flutter analyze` puis les tests Flutter concernés.
 5. Toujours mettre à jour la documentation (`README.md` et, si nécessaire, `AGENTS.md`) lorsque le produit, un module, un parcours ou l'architecture change.
 
-Nom du package Dart : `agrolink`. Identifiant d'application : `com.agrolink.app`.
+Nom du package Dart : `mboaharvest`. Identifiant d'application : `com.mboaharvest.app`.

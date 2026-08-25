@@ -49,7 +49,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     // Process order
     context.read<CartController>().checkout(
       'buyer_123', // Simulate buyer ID
-      'Client AgroLink', // Simulate Name
+      'Client MboaHarvest', // Simulate Name
       '+237 ${_phoneController.text}',
       _addressController.text.trim(),
       onOrderCreated: (order) {
