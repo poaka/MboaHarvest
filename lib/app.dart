@@ -11,15 +11,15 @@ import 'core/state/order_controller.dart';
 import 'core/presentation/main_layout.dart';
 import 'features/farmer/presentation/farmer_dashboard.dart';
 
-class AgroLinkApp extends StatefulWidget {
+class MboaHarvestApp extends StatefulWidget {
 
-  const AgroLinkApp({super.key});
+  const MboaHarvestApp({super.key});
 
   @override
-  State<AgroLinkApp> createState() => _AgroLinkAppState();
+  State<MboaHarvestApp> createState() => _MboaHarvestAppState();
 }
 
-class _AgroLinkAppState extends State<AgroLinkApp> {
+class _MboaHarvestAppState extends State<MboaHarvestApp> {
   AuthUser? _user;
   final _box = GetStorage();
   final _sessionKey = 'auth_session';
@@ -57,7 +57,7 @@ class _AgroLinkAppState extends State<AgroLinkApp> {
         ChangeNotifierProvider(create: (_) => OrderController()),
       ],
       child: MaterialApp(
-        title: 'AgroLink',
+        title: 'MboaHarvest',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
         home: _user == null

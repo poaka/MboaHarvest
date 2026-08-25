@@ -1,17 +1,17 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:agrolink/app.dart';
-import 'package:agrolink/features/auth/controller/auth_controller.dart';
-import 'package:agrolink/features/auth/models/auth_user.dart';
-import 'package:agrolink/features/home/controller/home_controller.dart';
-import 'package:agrolink/core/state/product_controller.dart';
+import 'package:mboaharvest/app.dart';
+import 'package:mboaharvest/features/auth/controller/auth_controller.dart';
+import 'package:mboaharvest/features/auth/models/auth_user.dart';
+import 'package:mboaharvest/features/home/controller/home_controller.dart';
+import 'package:mboaharvest/core/state/product_controller.dart';
 
 void main() {
   testWidgets('connecte un acheteur puis affiche l’accueil', (tester) async {
-    await tester.pumpWidget(const AgroLinkApp());
+    await tester.pumpWidget(const MboaHarvestApp());
 
-    expect(find.text('Du champ à votre table.'), findsOneWidget);
+    expect(find.text('Bienvenue sur MboaHarvest !'), findsWidgets);
 
     await tester.enterText(find.byKey(const Key('auth_phone')), '699887766');
     await tester.enterText(find.byKey(const Key('auth_password')), 'secret1');
@@ -19,7 +19,7 @@ void main() {
     await tester.tap(find.byKey(const Key('auth_submit')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Bonjour, Acheteur AgroLink'), findsOneWidget);
+    expect(find.text('Bonjour, Acheteur MboaHarvest'), findsOneWidget);
     expect(find.text('Tomates fraîches'), findsOneWidget);
   });
 

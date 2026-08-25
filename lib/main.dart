@@ -5,5 +5,5 @@ import 'app.dart';
 
 void main() async {
   await GetStorage.init();
-  runApp(const AgroLinkApp());
+  runApp(const MboaHarvestApp());
 }

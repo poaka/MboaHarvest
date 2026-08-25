@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.agrolink" "\0"
-            VALUE "FileDescription", "AgroLink" "\0"
+            VALUE "CompanyName", "com.mboaharvest" "\0"
+            VALUE "FileDescription", "MboaHarvest" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "agrolink" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.agrolink. All rights reserved." "\0"
-            VALUE "OriginalFilename", "agrolink.exe" "\0"
-            VALUE "ProductName", "AgroLink" "\0"
+            VALUE "InternalName", "mboaharvest" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 com.mboaharvest. All rights reserved." "\0"
+            VALUE "OriginalFilename", "mboaharvest.exe" "\0"
+            VALUE "ProductName", "MboaHarvest" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

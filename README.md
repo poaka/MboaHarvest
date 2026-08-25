@@ -1,6 +1,6 @@
-# AgroLink CM
+# MboaHarvest CM
 
-AgroLink CM connecte directement les agriculteurs camerounais vérifiés aux
+MboaHarvest CM connecte directement les agriculteurs camerounais vérifiés aux
 acheteurs : particuliers, restaurants, hôtels, supermarchés et grossistes.
 L'application couvre la découverte, les échanges, la commande, le paiement
 compatible Mobile Money et la confirmation de livraison.

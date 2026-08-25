@@ -1,11 +1,11 @@
 {
-    "name": "AgroLink",
-    "short_name": "AgroLink",
+    "name": "MboaHarvest",
+    "short_name": "MboaHarvest",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "AgroLink",
+    "description": "MboaHarvest",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -52,7 +52,7 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                       const SizedBox(height: 22),
                       Text(
-                        'Du champ à votre tables.',
+                        'Bienvenue sur MboaHarvest !',
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       const SizedBox(height: 10),
@@ -70,7 +70,7 @@ class _AuthPageState extends State<AuthPage> {
                       const SizedBox(height: 24),
                       const Center(
                         child: Text(
-                          'AgroLink CM · Marché local, échanges directs',
+                          'MboaHarvest CM · Marché local, échanges directs',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 12,
